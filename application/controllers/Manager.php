@@ -178,35 +178,97 @@ class Manager extends CI_Controller
     }
     public function getbranchdata()
     {
-        $data = array();
-        $data_row = array();
-        $querysubmenu = "SELECT `ltd_order`.* FROM `ltd_order` WHERE `ltd_order`.`status_verifikasi` = 'Permintaan telah diverifikasi' ORDER BY `ltd_order`.`tanggal_pemesanan` DESC";
-        $res = $this->db->query($querysubmenu)->result();
-        // var_dump($res);
-        // die;
-        $no = 1;
-        foreach ($res as $row) {
-            $data_row[] = array(
-                'no'   => $no,
-                'id_order'  => $row->id_order,
-                'customer'  => $row->customer,
-                'site_name' => $row->site_name,
-                'address' => $row->address,
-                'contractor' => $row->contractor,
-                'region' => $row->region,
-                'project' => $row->project,
-                'site_id' => $row->site_id,
-                'tanggal_pemesanan' => date('d-m-Y', $row->tanggal_pemesanan),
-                'type_tower' => $row->type_tower,
-                'no_phone' => $row->no_phone,
-                'email' => $row->email,
-                'status' => $row->status_verifikasi
-            );
-            $no++;
+        $this->load->driver('cache', array('adapter' => 'apc', 'backup' => 'file'));
+        $username = 'lutungan_indoutama@yahoo.com';
+        $password = 'IBS2020';
+        $url = 'https://tbm3.ibstower.com/login';
+        $cookie = 'cookie.txt';
+        $url2 = 'https://tbm3.ibstower.com/vendor/project/project_list/on_process/3135/ALL';
+
+        $postdata = 'identity=' . $username . '&password=' . $password;
+
+        $data_row = [];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie); // <-- add this line
+        curl_setopt($ch, CURLOPT_REFERER, $url);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
+        $data['status_login'] = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            echo 'Curl error: ' . curl_error($ch);
+            $data['message'] = 'Gagal login';
+            // return (json_encode($data));
+        } else {
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_URL, $url2);
+            curl_setopt($ch, CURLOPT_POST, 0);
+            // $result = json_decode(curl_exec($ch))->data;
+            if (!$result = $this->cache->get('result')) {
+                $result = json_decode(curl_exec($ch))->data;
+                $this->cache->save('result', $result, 60 * 60);
+            }
+            // $result = $this->cache->save('foo', json_decode(curl_exec($ch))->data, 60 * 60);
+
+            curl_close($ch);
+
+            $filtered = array_filter($result, function ($item) {
+                return in_array($item->assignment_type, ['CME']);
+            });
+
+            foreach ($filtered as $row) {
+                $data_row[] = [
+                    'id' => $row->id,
+                    'wbs_id' => $row->wbs_id,
+                    'iro_number' => $row->iro_number,
+                    'site_id_ibs' => $row->site_id_ibs,
+                    'site_name' => $row->site_name,
+                    'sitac_start_date' => $row->sitac_start_date,
+                    'work_status' => floor((time() - strtotime($row->sitac_start_date)) / 86400) >= 45 ? 'DONE' : 'RUNNING',
+                    'nama' => $row->nama
+                ];
+            }
+
+            $data['message'] = 'Berhasil Mendapatkan API';
+            $data['data'] = $data_row;
+            echo (json_encode($data));
         }
-        $data['data'] = $data_row;
-        echo (json_encode($data));
     }
+    // public function getbranchdata()
+    // {
+    //     $data = array();
+    //     $data_row = array();
+    //     $querysubmenu = "SELECT `ltd_order`.* FROM `ltd_order` WHERE `ltd_order`.`status_verifikasi` = 'Permintaan telah diverifikasi' ORDER BY `ltd_order`.`tanggal_pemesanan` DESC";
+    //     $res = $this->db->query($querysubmenu)->result();
+    //     // var_dump($res);
+    //     // die;
+    //     $no = 1;
+    //     foreach ($res as $row) {
+    //         $data_row[] = array(
+    //             'no'   => $no,
+    //             'id_order'  => $row->id_order,
+    //             'customer'  => $row->customer,
+    //             'site_name' => $row->site_name,
+    //             'address' => $row->address,
+    //             'contractor' => $row->contractor,
+    //             'region' => $row->region,
+    //             'project' => $row->project,
+    //             'site_id' => $row->site_id,
+    //             'tanggal_pemesanan' => date('d-m-Y', $row->tanggal_pemesanan),
+    //             'type_tower' => $row->type_tower,
+    //             'no_phone' => $row->no_phone,
+    //             'email' => $row->email,
+    //             'status' => $row->status_verifikasi
+    //         );
+    //         $no++;
+    //     }
+    //     $data['data'] = $data_row;
+    //     echo (json_encode($data));
+    // }
     public function getbranchterverif()
     {
         $data = array();
