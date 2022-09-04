@@ -35,7 +35,27 @@ $(window).on('load', function () {
             targets: 5,
             visible: false,
         }],
-        "order": [[5, 'dsc']]
+        "order": [[5, 'dsc']],
+        initComplete: function (settings, json) {
+            $('#' + settings.sTableId + ' tbody tr').on('click', function () {
+                var data = myBranch.row(this).data();
+                console.log(data)
+                console.log(`${window.location.href}/getdatasite`)
+                $('#site-name').html(data.site_name)
+                $('#site-id').html(data.site_id_ibs)
+                $.ajax({
+                    type: "POST",
+                    url: `${window.location.href}/getdatasite`,
+                    data: ({
+                        site_id: data.id
+                    }),
+                    success: function (data) {
+                        console.log(data)
+                        Looper.toggleSidebar()
+                    }
+                });
+            });
+        }
     })
 
     $('#table-search').keyup(function () {
@@ -43,19 +63,48 @@ $(window).on('load', function () {
     })
     var sidebar
 
-    myBranch.on('click', 'tbody tr td', function () {
-        $('tbody tr').removeAttr('style')
-        if ($('[class="page has-sidebar has-sidebar-expand-xl"').length > 0) {
-            $('.page').removeClass('has-sidebar has-sidebar-expand-xl')
-        }
-        if ($(this).parent().find('td.id').html() != sidebar) {
-            sidebar = $(this).parent().find('td.id').html()
-            $(this).parent().attr('style', 'color: #363642;background-color: #c0c0ff;')
-            $('.page').addClass('has-sidebar has-sidebar-expand-xl')
-        } else {
-            sidebar = ""
-        }
+    $('.confirm').on('click', function () {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                )
+            }
+        })
     })
+
+    // myBranch.on('click', 'tbody tr td', function () {
+    // $.ajax({
+    //     url: `${window.location.href}/getdatasite`,
+    //     data: ({
+    //         site_id: h
+    //     }),
+    //     success: function (data) {
+    //         console.log(data)
+    //     }
+    // });
+    // $('tbody tr').removeAttr('style')
+    // if ($('[class="page has-sidebar has-sidebar-expand-xl"').length > 0) {
+    //     $('.page').removeClass('has-sidebar has-sidebar-expand-xl')
+    // }
+    // if ($(this).parent().find('td.id').html() != sidebar) {
+    //     sidebar = $(this).parent().find('td.id').html()
+    //     $(this).parent().attr('style', 'color: #363642;background-color: #c0c0ff;')
+    //     $('.page').addClass('has-sidebar has-sidebar-expand-xl')
+    // } else {
+    //     sidebar = ""
+    // }
+    // })
 
 })
 // $('[class="page has-sidebar has-sidebar-expand-xl"').length < 1

@@ -238,6 +238,11 @@ class Manager extends CI_Controller
             echo (json_encode($data));
         }
     }
+    public function getdatasite()
+    {
+        $data['site_id'] = $this->input->post('site_id');
+        echo (json_encode($data));
+    }
     // public function getbranchdata()
     // {
     //     $data = array();

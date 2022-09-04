@@ -2,7 +2,8 @@
     <!-- .wrapper -->
     <div class="wrapper">
         <!-- .page -->
-        <div class="page">
+        <div class="page has-sidebar">
+            <div class="sidebar-backdrop"></div>
             <!-- .page-inner -->
             <div class="page-inner">
                 <!-- .page-title-bar -->
@@ -86,66 +87,427 @@
                 </div><!-- /.page-inner -->
             </div><!-- /.page -->
             <div class="page-sidebar">
-                <!-- .card -->
-                <div class="card card-reflow">
-                    <!-- <div class="card-body">
-                        <h4 class="card-title"> Payments </h4>
-                        <div class="progress progress-sm rounded-0 mb-1">
-                            <div class="progress-bar bg-success w-75" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <p class="text-muted text-weight-bolder small"> $2,322 of $3,076 </p>
-                    </div> -->
-                    <!-- .card-body -->
-                    <div class="card-body border-top">
-                        <h4 class="card-title"> Proses Kemajuan </h4><!-- .timeline -->
-                        <ul class="timeline timeline-dashed-line">
-                            <!-- .timeline-item -->
-                            <li class="timeline-item">
-                                <!-- .timeline-figure -->
-                                <div class="timeline-figure">
-                                    <span class="tile tile-circle tile-xs bg-success"><i class="fa fa-check"></i></span>
-                                </div><!-- /.timeline-figure -->
-                                <!-- .timeline-body -->
-                                <div class="timeline-body">
-                                    <h6 class="timeline-heading"> Site View Before Site Opening (0%) </h6><span class="timeline-date">08/18/2018 – 12:42 PM</span>
-                                </div><!-- /.timeline-body -->
-                            </li><!-- /.timeline-item -->
-                            <!-- .timeline-item -->
-                            <li class="timeline-item">
-                                <!-- .timeline-figure -->
-                                <div class="timeline-figure">
-                                    <span class="tile tile-circle tile-xs bg-success"><i class="fa fa-check"></i></span>
-                                </div><!-- /.timeline-figure -->
-                                <!-- .timeline-body -->
-                                <div class="timeline-body">
-                                    <h6 class="timeline-heading"> TOWER FOUNDATION EXCAVATION (with deep Measurement using meteran) <a href="#" class="text-muted"><small>details</small></a>
-                                    </h6><span class="timeline-date">08/18/2018 – 12:42 PM</span>
-                                </div><!-- /.timeline-body -->
-                            </li><!-- /.timeline-item -->
-                            <!-- .timeline-item -->
-                            <li class="timeline-item">
-                                <!-- .timeline-figure -->
-                                <div class="timeline-figure">
-                                    <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
-                                </div><!-- /.timeline-figure -->
-                                <!-- .timeline-body -->
-                                <div class="timeline-body">
-                                    <h6 class="timeline-heading"> Invoice viewed </h6>
-                                </div><!-- /.timeline-body -->
-                            </li><!-- /.timeline-item -->
-                            <!-- .timeline-item -->
-                            <li class="timeline-item">
-                                <!-- .timeline-figure -->
-                                <div class="timeline-figure">
-                                    <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
-                                </div><!-- /.timeline-figure -->
-                                <!-- .timeline-body -->
-                                <div class="timeline-body">
-                                    <h6 class="timeline-heading"> Invoice fully paid </h6>
-                                </div><!-- /.timeline-body -->
-                            </li><!-- /.timeline-item -->
-                        </ul><!-- /.timeline -->
-                    </div><!-- /.card-body -->
-                </div><!-- /.card -->
+                <!-- .sidebar-header -->
+                <header class="sidebar-header d-sm-none">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item active">
+                                <a href="#" onclick="Looper.toggleSidebar()"><i class="breadcrumb-icon fa fa-angle-left mr-2"></i>Back</a>
+                            </li>
+                        </ol>
+                    </nav>
+                </header><!-- /.sidebar-header -->
+                <!-- .sidebar-section -->
+                <div class="sidebar-section">
+                    <button type="button" class="close mt-n1 d-none d-sm-block" onclick="Looper.toggleSidebar()" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h6 id="site-name"></h6>
+                    <div class="card card-reflow">
+                        <div class="card-body">
+                            <h4 class="card-title"> Proses Kemajuan </h4>
+                            <div class="progress rounded-0 mb-1">
+                                <div class="progress-bar bg-primary w-75" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
+                            </div>
+                            <p class="text-muted text-weight-bolder small mb-0" id="site-id"></p>
+                        </div><!-- .card-body -->
+                    </div>
+                </div><!-- /.sidebar-section -->
+                <div class="card-body border-top">
+                    <!-- <h4 class="card-title"> History </h4> -->
+                    <ul class="timeline timeline-dashed-line mt-2 pr-0" id="green-field">
+                        <!-- .timeline-item -->
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="timeline-heading"> SITE VIEW BEFORE SITE OPENING </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span> <!-- .switcher-control switcher-control-success confirm -->
+                                </div>
+                                <div>
+                                    <label class="switcher-control switcher-control-success confirm"><input type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                </div> <!-- /.switcher-control switcher-control-success confirm -->
+                                <!-- <h6 class="timeline-heading"> SITE VIEW BEFORE SITE OPENING </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span> -->
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="timeline-heading"> TOWER FOUNDATION EXCAVATION </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span>
+                                </div>
+                                <div>
+                                    <label class="switcher-control switcher-control-success confirm"><input type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                </div>
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="timeline-heading"> ANCHOR SETTING AND FORM WORK </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span>
+                                </div>
+                                <div>
+                                    <label class="switcher-control switcher-control-success confirm"><input type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                </div>
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="timeline-heading"> TOWER FOUNDATION POURING + TOOLS </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span>
+                                </div>
+                                <div>
+                                    <label class="switcher-control switcher-control-success confirm"><input type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                </div>
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="timeline-heading"> TEST SLUMP AND CONCRETE TEST SAMPLE </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span>
+                                </div>
+                                <div>
+                                    <label class="switcher-control switcher-control-success confirm"><input type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                </div>
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="timeline-heading"> TOWER FOUNDATION BACKFILLING + COMPACTED </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span>
+                                </div>
+                                <div>
+                                    <label class="switcher-control switcher-control-success confirm"><input type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                </div>
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="timeline-heading"> TOWER ERECTION </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span>
+                                </div>
+                                <div>
+                                    <label class="switcher-control switcher-control-success confirm"><input type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                </div>
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="timeline-heading"> FOUNDATION FENCE EXCAVATION </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span>
+                                </div>
+                                <div>
+                                    <label class="switcher-control switcher-control-success confirm"><input type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                </div>
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="timeline-heading"> FENCE FOUNDATION </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span>
+                                </div>
+                                <div>
+                                    <label class="switcher-control switcher-control-success confirm"><input type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                </div>
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="timeline-heading"> VERTICALITY TOWER CHECKING </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span>
+                                </div>
+                                <div>
+                                    <label class="switcher-control switcher-control-success confirm"><input type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                </div>
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="timeline-heading"> STICK ROD INSTALLATION </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span>
+                                </div>
+                                <div>
+                                    <label class="switcher-control switcher-control-success confirm"><input type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                </div>
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="timeline-heading"> GROUNDING CONTROL PIT VIEW </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span>
+                                </div>
+                                <div>
+                                    <label class="switcher-control switcher-control-success confirm"><input type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                </div>
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="timeline-heading"> CAD WELDED </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span>
+                                </div>
+                                <div>
+                                    <label class="switcher-control switcher-control-success confirm"><input type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                </div>
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="timeline-heading"> TOWER LADDER AND BORDES TOWER </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span>
+                                </div>
+                                <div>
+                                    <label class="switcher-control switcher-control-success confirm"><input type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                </div>
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="timeline-heading"> HORIZONTAL OUT DOOR CABLE LADDER </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span>
+                                </div>
+                                <div>
+                                    <label class="switcher-control switcher-control-success confirm"><input type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                </div>
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="timeline-heading"> SHELTER FOUNDATION </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span>
+                                </div>
+                                <div>
+                                    <label class="switcher-control switcher-control-success confirm"><input type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                </div>
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="timeline-heading"> ME INSTALLATION FINISH </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span>
+                                </div>
+                                <div>
+                                    <label class="switcher-control switcher-control-success confirm"><input type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                </div>
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="timeline-heading"> LIGHTNING PROTECTION </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span>
+                                </div>
+                                <div>
+                                    <label class="switcher-control switcher-control-success confirm"><input type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                </div>
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="timeline-heading"> TOWER LAMPS (OBL) & BRACKET </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span>
+                                </div>
+                                <div>
+                                    <label class="switcher-control switcher-control-success confirm"><input type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                </div>
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="timeline-heading"> ANTENNA MOUNTING </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span>
+                                </div>
+                                <div>
+                                    <label class="switcher-control switcher-control-success confirm"><input type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                </div>
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="timeline-heading"> GPS MOUNTING </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span>
+                                </div>
+                                <div>
+                                    <label class="switcher-control switcher-control-success confirm"><input type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                </div>
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="timeline-heading"> TOWER BUSBAR </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span>
+                                </div>
+                                <div>
+                                    <label class="switcher-control switcher-control-success confirm"><input type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                </div>
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="timeline-heading"> YARD / SITE LAMPS </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span>
+                                </div>
+                                <div>
+                                    <label class="switcher-control switcher-control-success confirm"><input type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                </div>
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="timeline-heading"> PAVING BLOCK AND FINISHING </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span>
+                                </div>
+                                <div>
+                                    <label class="switcher-control switcher-control-success confirm"><input type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                </div>
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="timeline-heading"> ACCESS ROAD </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span>
+                                </div>
+                                <div>
+                                    <label class="switcher-control switcher-control-success confirm"><input type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                </div>
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-xs"><i class="fa fa-check d-none"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="timeline-heading"> SITE VIEW </h6><span class="timeline-date d-none">08/18/2018 – 12:42 PM</span>
+                                </div>
+                                <div>
+                                    <label class="switcher-control switcher-control-success confirm"><input type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                </div>
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        <!-- .timeline-item -->
+                    </ul><!-- /.timeline -->
+                </div><!-- /.card-body -->
             </div>
         </div><!-- .app-footer -->
