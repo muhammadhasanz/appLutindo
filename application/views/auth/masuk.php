@@ -54,12 +54,12 @@
     </script><!-- END THEME STYLES -->
 </head>
 
-<body>
+<body style="background-image: url(<?= base_url('assets/img/intro-bg.svg') ?>); background-size: cover;">
     <!-- .auth -->
-    <main class="auth">
-        <header id="auth-header" class="auth-header" style="background-image: url(<?= base_url('assets/img/intro-bg.svg') ?>);">
+    <main class="auth" style="background-color: transparent;">
+        <header id="auth-header" class="auth-header pt-5" style="background-color: transparent;">
             <h1>
-                <img class="mb-4" height="80" src="<?= base_url() ?>assets/img/logo.png" alt="">
+                <img class="mb-2" height="80" src="<?= base_url() ?>assets/img/logo.png" alt="">
             </h1>
         </header><!-- form -->
         <form action="<?= base_url('auth'); ?>" method="post" class="auth-form">
@@ -93,7 +93,7 @@
             </fieldset>
         </form><!-- /.auth-form -->
         <!-- copyright -->
-        <footer class="auth-footer">
+        <footer class="auth-footer text-dark">
             <p class="text-center"> &copy; Copyright <strong>Team Lutindo</strong>. All Rights Reserved <br>
                 Modified by Team Lutindo
             </p>

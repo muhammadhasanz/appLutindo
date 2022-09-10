@@ -1,4 +1,7 @@
 $(window).on('load', function () {
+
+    var indicator = true
+
     var myBranch = $('#myBranch').DataTable({
         language: {
             paginate: {
@@ -10,7 +13,7 @@ $(window).on('load', function () {
         ajax: 'manager/getbranchdata',
         deferRender: true,
         "drawCallback": function () {
-            $('tbody > tr > td').css('cursor', 'pointer');
+            $('tbody > tr').css('cursor', 'pointer');
         },
         columns: [{
             data: 'wbs_id',
@@ -25,7 +28,7 @@ $(window).on('load', function () {
             data: 'work_status',
             className: 'align-middle text-center'
         }, {
-            data: 'nama',
+            data: 'site_type',
             className: 'align-middle'
         }, {
             data: 'id',
@@ -37,20 +40,118 @@ $(window).on('load', function () {
         }],
         "order": [[5, 'dsc']],
         initComplete: function (settings, json) {
-            $('#' + settings.sTableId + ' tbody tr').on('click', function () {
+            myBranch.on('click', 'tbody tr', function () {
                 var data = myBranch.row(this).data();
                 console.log(data)
-                console.log(`${window.location.href}/getdatasite`)
+                tgl_sitac = data.sitac_start_date.split('-')
+                // console.log(`${window.location.href}/getdatasite`) 08/18/2018 – 12:42 PM
+                indicator = true
                 $('#site-name').html(data.site_name)
                 $('#site-id').html(data.site_id_ibs)
+                $('#site_id').val(data.id)
+                $('#site_type').val(data.site_type)
+                $('#greenfield').addClass('d-none')
+                $('#rooftop').addClass('d-none')
+                if (data.site_type == 'Greenfield') {
+                    $('#greenfield').removeClass('d-none')
+                    $('#rooftop').addClass('d-none')
+                } else {
+                    $('#greenfield').addClass('d-none')
+                    $('#rooftop').removeClass('d-none')
+                }
+                $('.timeline-figure .fa-check').removeClass('d-print-none')
+                $('[role="progressbar"]').attr('class', 'progress-bar bg-primary')
+                $('[role="progressbar"]').html('')
+                $('[role="progressbar"]').css('width', "0%")
+                $('.timeline-figure .fa-check').addClass('d-none')
+                $('.timeline-date').removeClass('d-print-none')
+                $('.timeline-date').addClass('d-none')
+                $('.tile-circle').removeClass('bg-success')
+                $('.switcher-input').prop('checked', false)
+                $('.confirm').css('cursor', 'pointer')
+                $('.switcher-indicator').css('cursor', 'pointer')
+                $('.confirm').removeClass('d-none')
                 $.ajax({
                     type: "POST",
                     url: `${window.location.href}/getdatasite`,
                     data: ({
                         site_id: data.id
                     }),
-                    success: function (data) {
-                        console.log(data)
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.check_site.length == 0) {
+                            if (data.work_status == "DONE") {
+                                indicator = false
+                                $('[role="progressbar"]').css('width', "100%")
+                                $('[role="progressbar"]').html('100%')
+                                $('.confirm').removeAttr('style')
+                                $('.switcher-indicator').css('cursor', 'default')
+                                $('.tile-circle').addClass('bg-success')
+                                $('.timeline-figure .fa-check').removeClass('d-none')
+                                $('.timeline-figure .fa-check').addClass('d-print-none')
+                                $('.timeline-date').removeClass('d-none')
+                                $('.timeline-date').addClass('d-print-none')
+                                $('.timeline-date').html(data.work_status == "DONE" ? `${tgl_sitac[2]}/${tgl_sitac[1]}/${tgl_sitac[0]} - 15:01` : '')
+                                $('.confirm').addClass('d-none')
+                            } else {
+                                $('.confirm').addClass('d-none')
+                                $('[data-id="1"]').parent().removeClass('d-none')
+                            }
+                        } else {
+                            if (data.work_status == "DONE") {
+                                indicator = false
+                                $('[role="progressbar"]').css('width', "100%")
+                                $('[role="progressbar"]').html('100%')
+                                $('.confirm').removeAttr('style')
+                                $('.switcher-indicator').css('cursor', 'default')
+                                $('.tile-circle').addClass('bg-success')
+                                $('.timeline-figure .fa-check').removeClass('d-none')
+                                $('.timeline-figure .fa-check').addClass('d-print-none')
+                                $('.timeline-date').removeClass('d-none')
+                                $('.timeline-date').addClass('d-print-none')
+                                $('.timeline-date').html(data.work_status == "DONE" ? `${tgl_sitac[2]}/${tgl_sitac[1]}/${tgl_sitac[0]} - 15:01` : '')
+                                $('.confirm').addClass('d-none')
+                                $.each(result.check_site, (key, value) => {
+                                    const event = new Date(value.updated_at).toLocaleString().split(' ');
+                                    const date_time = event[1].split('.');
+                                    if (value.status == 1) {
+                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').html(`${event[0]} - ${date_time[0]}:${date_time[1]}`)
+                                    }
+                                })
+                            } else {
+                                $('.confirm').addClass('d-none')
+                                let last = 0
+                                let site_length = 0
+                                $.each(result.check_site, (key, value) => {
+                                    const event = new Date(value.updated_at).toLocaleString().split(' ');
+                                    const date_time = event[1].split('.');
+                                    if (value.status == 1) {
+                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.tile-circle').addClass('bg-success')
+                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-figure .fa-check').removeClass('d-none')
+                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-figure .fa-check').addClass('d-print-none')
+                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').removeClass('d-none')
+                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').html(`${event[0]} - ${date_time[0]}:${date_time[1]}`)
+                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').addClass('d-print-none')
+                                        site_length++
+                                    }
+                                    $(`[data-id="${value.tahap_id}"]`).parent().removeClass('d-none')
+                                    $(`[data-id="${value.tahap_id}"]`).prop('checked', value.status == 1 ? true : false)
+                                    if (value.status == 0) {
+                                        return false
+                                    } else {
+                                        last = parseInt(value.tahap_id) + 1
+                                    }
+                                })
+                                var progress = Math.floor(site_length / (result.check_site[0].site_type == 'Greenfield' ? 27 : 19) * 100)
+                                $('[role="progressbar"]').css('width', `${progress}%`)
+                                $('[role="progressbar"]').html(`${progress}%`)
+                                // console.log(last)
+                                if (last != 0)
+                                    $(`[data-id="${last}"]`).parent().removeClass('d-none')
+                            }
+                        }
+                        // console.log(data.work_status)
+                        console.log(result)
                         Looper.toggleSidebar()
                     }
                 });
@@ -61,26 +162,88 @@ $(window).on('load', function () {
     $('#table-search').keyup(function () {
         myBranch.columns(parseInt($('#column').val())).search(this.value).draw();
     })
-    var sidebar
 
     $('.confirm').on('click', function () {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                )
-            }
+        const buttonSwal = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-subtle-success mr-2',
+                cancelButton: 'btn btn-subtle-danger'
+            },
+
+            buttonsStyling: false
         })
+        if (indicator) {
+            // console.log($(this).find('.switcher-input').prop("checked") ? 0 : 1)
+            var status = $(this).find('.switcher-input').prop("checked") ? 0 : 1
+            buttonSwal.fire({
+                title: 'Apakah anda yakin?',
+                text: $(this).find('.switcher-input').prop("checked") ? "Anda membatalkan konfirmasi tahap ini" : "Anda mengkonfirmasi tahap ini!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: $(this).find('.switcher-input').prop("checked") ? 'Ya, batalkan!' : 'Ya, konfirmasi!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: `${window.location.href}/checksite`,
+                        data: ({
+                            site_id: $("#site_id").val(),
+                            site_type: $("#site_type").val(),
+                            tahap_id: $(this).find('.switcher-input').data('id'),
+                            status: status
+                        }),
+                        dataType: "json",
+                        success: function (result) {
+                            console.log(result)
+                            $('.timeline-figure .fa-check').addClass('d-none')
+                            $('.timeline-date').removeClass('d-print-none')
+                            $('.timeline-date').addClass('d-none')
+                            $('.tile-circle').removeClass('bg-success')
+                            $('.confirm').addClass('d-none')
+                            let last = 0
+                            let site_length = 0
+                            $.each(result.check_site, (key, value) => {
+                                const event = new Date(value.updated_at).toLocaleString().split(' ');
+                                const date_time = event[1].split('.');
+                                if (value.status == 1) {
+                                    $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.tile-circle').addClass('bg-success')
+                                    $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-figure .fa-check').removeClass('d-none')
+                                    $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-figure .fa-check').addClass('d-print-none')
+                                    $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').removeClass('d-none')
+                                    $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').html(`${event[0]} - ${date_time[0]}:${date_time[1]}`)
+                                    $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').addClass('d-print-none')
+                                    site_length++
+                                }
+                                $(`[data-id="${value.tahap_id}"]`).parent().removeClass('d-none')
+                                $(`[data-id="${value.tahap_id}"]`).prop('checked', true)
+                                if (value.status == 0) {
+                                    last = parseInt(value.tahap_id)
+                                    return false
+                                } else {
+                                    last = parseInt(value.tahap_id) + 1
+                                }
+                            })
+                            var progress = Math.floor(site_length / (result.check_site[0].site_type == 'Greenfield' ? 27 : 19) * 100)
+                            $('[role="progressbar"]').css('width', `${progress}%`)
+                            $('[role="progressbar"]').html(`${progress}%`)
+                            console.log(last)
+                            if (last != 0) {
+                                $(`[data-id="${last}"]`).parent().removeClass('d-none')
+                                $(`[data-id="${last}"]`).prop('checked', false)
+                            }
+                            buttonSwal.fire(
+                                $(this).find('.switcher-input').prop("checked") ? "Dibatalkan" : 'Dikonfirmasi!',
+                                $(this).find('.switcher-input').prop("checked") ? "Tahap telah dibatalkan" : 'Tahap telah dikonfirmasi.',
+                                'success'
+                            )
+                        }
+                    });
+                }
+            })
+
+        }
     })
 
     // myBranch.on('click', 'tbody tr td', function () {

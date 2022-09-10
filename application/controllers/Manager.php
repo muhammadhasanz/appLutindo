@@ -183,7 +183,8 @@ class Manager extends CI_Controller
         $password = 'IBS2020';
         $url = 'https://tbm3.ibstower.com/login';
         $cookie = 'cookie.txt';
-        $url2 = 'https://tbm3.ibstower.com/vendor/project/project_list/on_process/3135/ALL';
+        $url2 = 'https://tbm3.ibstower.com/vendor/project/list_project/3135';
+        $url3 = 'https://tbm3.ibstower.com/vendor/project/project_list/on_process/3135/ALL';
 
         $postdata = 'identity=' . $username . '&password=' . $password;
 
@@ -207,20 +208,29 @@ class Manager extends CI_Controller
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_URL, $url2);
             curl_setopt($ch, CURLOPT_POST, 0);
-            // $result = json_decode(curl_exec($ch))->data;
-            if (!$result = $this->cache->get('result')) {
-                $result = json_decode(curl_exec($ch))->data;
-                $this->cache->save('result', $result, 60 * 60);
-            }
-            // $result = $this->cache->save('foo', json_decode(curl_exec($ch))->data, 60 * 60);
+            $result = json_decode(curl_exec($ch))->data;
+            // if (!$result = $this->cache->get('result')) {
+            //     $result = json_decode(curl_exec($ch))->data;
+            //     $this->cache->save('result', $result, 60 * 60);
+            // }
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_URL, $url3);
+            curl_setopt($ch, CURLOPT_POST, 0);
+            $result_url3 = json_decode(curl_exec($ch))->data;
+            // if (!$result_url3 = $this->cache->get('result_url3')) {
+            //     $result_url3 = json_decode(curl_exec($ch))->data;
+            //     $this->cache->save('result_url3', $result_url3, 60 * 60);
+            // }
 
             curl_close($ch);
 
-            $filtered = array_filter($result, function ($item) {
+            $filtered_result = array_filter($result_url3, function ($item) {
                 return in_array($item->assignment_type, ['CME']);
             });
 
-            foreach ($filtered as $row) {
+            foreach ($filtered_result as $row) {
+                // $filtered = array_search($row->site_id_ibs, array_column($result_url3, 'site_id_ibs'));
+                $filtered = $this->array_recursive_search_key_map($row->site_id_ibs, $result) ?? null;
                 $data_row[] = [
                     'id' => $row->id,
                     'wbs_id' => $row->wbs_id,
@@ -229,7 +239,7 @@ class Manager extends CI_Controller
                     'site_name' => $row->site_name,
                     'sitac_start_date' => $row->sitac_start_date,
                     'work_status' => floor((time() - strtotime($row->sitac_start_date)) / 86400) >= 45 ? 'DONE' : 'RUNNING',
-                    'nama' => $row->nama
+                    'site_type' => $filtered->site_type ?? null == 'GF' ? 'Greenfield' : 'Rooftop'
                 ];
             }
 
@@ -238,9 +248,52 @@ class Manager extends CI_Controller
             echo (json_encode($data));
         }
     }
+    public function array_recursive_search_key_map($needle, $haystack)
+    {
+        foreach ($haystack as $first_level_key => $value) {
+            if ($needle === $value->site_id_ibs) {
+                return $value;
+            }
+        }
+        return false;
+    }
     public function getdatasite()
     {
-        $data['site_id'] = $this->input->post('site_id');
+        $site_id = $this->input->post('site_id');
+        $data['check_site'] = $this->db->get_where('check_site', ['site_id' => $site_id])->result();
+        echo (json_encode($data));
+    }
+    public function checksite()
+    {
+        $site_id = $this->input->post('site_id');
+        $tahap_id = $this->input->post('tahap_id');
+        $site_type = $this->input->post('site_type');
+        $status = $this->input->post('status');
+        $check_site = $this->db->get_where('check_site', ['site_id' => $site_id, 'tahap_id' => $tahap_id])->result_array();
+        $data_site = [
+            'site_id' => $site_id,
+            'site_type' => $site_type,
+            'status' => $status
+        ];
+        // return $status;
+
+        if (count($check_site) > 0) {
+            $data_site['updated_at'] = date('Y-m-d H:i:s');
+            if ($status == 1) {
+                $this->db->where(['site_id' => $site_id, 'tahap_id' => $tahap_id])->update('check_site', $data_site);
+            } else {
+                $this->db->where(['site_id' => $site_id, 'tahap_id >=' => $tahap_id])->update('check_site', $data_site);
+            }
+        } else {
+            $data_site['tahap_id'] = $tahap_id;
+            $data_site['created_at'] = date('Y-m-d H:i:s');
+            $data_site['updated_at'] = date('Y-m-d H:i:s');
+            $this->db->insert('check_site', $data_site);
+        }
+
+        $data['check_site'] = $this->db->get_where('check_site', ['site_id' => $site_id])->result();
+        $data['status'] = $status;
+
         echo (json_encode($data));
     }
     // public function getbranchdata()
