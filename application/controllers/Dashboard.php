@@ -48,7 +48,7 @@ class Dashboard extends CI_Controller
             curl_setopt($ch, CURLOPT_URL, $url2);
             curl_setopt($ch, CURLOPT_POST, 0);
             // $result = json_decode(curl_exec($ch))->data;
-            if (!$result = $this->cache->get('result')) {
+            if (!$result = $this->cache->get('result_dash')) {
                 $result = json_decode(curl_exec($ch))->data;
                 $this->cache->save('result', $result, 60 * 60);
             }
@@ -56,7 +56,7 @@ class Dashboard extends CI_Controller
             curl_setopt($ch, CURLOPT_URL, $url3);
             curl_setopt($ch, CURLOPT_POST, 0);
             // $result_url3 = json_decode(curl_exec($ch))->data;
-            if (!$result_url3 = $this->cache->get('result_url3')) {
+            if (!$result_url3 = $this->cache->get('result_url3_dash')) {
                 $result_url3 = json_decode(curl_exec($ch))->data;
                 $this->cache->save('result_url3', $result_url3, 60 * 60);
             }
