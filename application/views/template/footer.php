@@ -50,17 +50,9 @@
     <!-- <script src="<?= base_url(); ?>assets/javascript/type.js"></script> -->
 <?php elseif ($this->uri->segment(1) == 'driver') : ?>
     <script src="<?= base_url(); ?>assets/javascript/pages/datatables-filters-demo.js"></script>
-<?php elseif ($this->uri->segment(1) == 'manager') : ?>
-    <?php if ($this->uri->segment(2) == 'pembangunan') : ?>
-        <script src="<?= base_url(); ?>assets/javascript/branch-terverif.js"></script>
-    <?php elseif ($this->uri->segment(2) == 'pengkoneksian') : ?>
-        <script src="<?= base_url(); ?>assets/javascript/pengkoneksian.js"></script>
-    <?php elseif ($this->uri->segment(2) == 'aktif') : ?>
-        <script src="<?= base_url(); ?>assets/javascript/aktif.js"></script>
-    <?php else : ?>
-        <script src="<?= base_url(); ?>assets/javascript/branch-data.js"></script>
-        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <?php endif; ?>
+<?php elseif ($this->uri->segment(1) == 'projects') : ?>
+    <script src="<?= base_url(); ?>assets/javascript/branch-data.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="<?= base_url(); ?>assets/javascript/pages/datatables-filters-demo.js"></script>
 <?php elseif ($this->uri->segment(1) == 'sites') : ?>
     <script src="<?= base_url(); ?>assets/javascript/siteaktif.js"></script>

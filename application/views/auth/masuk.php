@@ -94,8 +94,8 @@
         </form><!-- /.auth-form -->
         <!-- copyright -->
         <footer class="auth-footer text-dark">
-            <p class="text-center"> &copy; Copyright <strong>Team Lutindo</strong>. All Rights Reserved <br>
-                Modified by Team Lutindo
+            <p class="text-center"> &copy; Copyright <strong>JTIK UNM</strong>. All Rights Reserved <br>
+                Developed By Aditya Dwi Gunawan
             </p>
         </footer>
     </main><!-- /.auth -->

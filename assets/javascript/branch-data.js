@@ -10,7 +10,7 @@ $(window).on('load', function () {
             }
         },
         autoWidth: false,
-        ajax: 'manager/getbranchdata',
+        ajax: 'projects/getbranchdata',
         deferRender: true,
         "drawCallback": function () {
             $('tbody > tr').css('cursor', 'pointer');
@@ -48,7 +48,7 @@ $(window).on('load', function () {
                 indicator = true
                 $('#site-name').html(data.site_name)
                 $('#site-id').html(data.site_id_ibs)
-                $('#site_id').val(data.id)
+                $('#site_id').val(data.site_id_ibs)
                 $('#site_type').val(data.site_type)
                 $('#greenfield').addClass('d-none')
                 $('#rooftop').addClass('d-none')
@@ -75,7 +75,7 @@ $(window).on('load', function () {
                     type: "POST",
                     url: `${window.location.href}/getdatasite`,
                     data: ({
-                        site_id: data.id
+                        site_id: data.site_id_ibs
                     }),
                     dataType: "json",
                     success: function (result) {
@@ -95,7 +95,9 @@ $(window).on('load', function () {
                                 $('.confirm').addClass('d-none')
                             } else {
                                 $('.confirm').addClass('d-none')
-                                $('[data-id="1"]').parent().removeClass('d-none')
+                                if ($('#role-id').val() != 5) {
+                                    $('[data-id="1"]').parent().removeClass('d-none')
+                                }
                             }
                         } else {
                             if (data.work_status == "DONE") {
@@ -158,6 +160,46 @@ $(window).on('load', function () {
             });
         }
     })
+    $('#projetcs').DataTable({
+        language: {
+            paginate: {
+                previous: '<i class="fa fa-lg fa-angle-left"></i>',
+                next: '<i class="fa fa-lg fa-angle-right"></i>'
+            }
+        },
+        autoWidth: false,
+        ajax: `${window.origin}/projects/getnewsite`,
+        deferRender: true,
+        "drawCallback": function () {
+            $('tbody > tr').css('cursor', 'pointer');
+        },
+        columns: [{
+            data: 'wbs_id',
+            className: 'align-middle'
+        }, {
+            data: 'site_id_ibs',
+            className: 'align-middle id'
+        }, {
+            data: 'site_name',
+            className: 'align-middle'
+        }, {
+            data: 'assignment_type',
+            className: 'align-middle text-center'
+        }, {
+            data: 'work_status',
+            className: 'align-middle'
+        }, {
+            data: 'nama',
+            className: 'align-middle'
+        }, {
+            data: 'id',
+        }],
+        columnDefs: [{
+            targets: 6,
+            visible: false,
+        }],
+        "order": [[6, 'dsc']],
+    })
 
     $('#table-search').keyup(function () {
         myBranch.columns(parseInt($('#column').val())).search(this.value).draw();
@@ -175,6 +217,7 @@ $(window).on('load', function () {
         if (indicator) {
             // console.log($(this).find('.switcher-input').prop("checked") ? 0 : 1)
             var status = $(this).find('.switcher-input').prop("checked") ? 0 : 1
+
             buttonSwal.fire({
                 title: 'Apakah anda yakin?',
                 text: $(this).find('.switcher-input').prop("checked") ? "Anda membatalkan konfirmasi tahap ini" : "Anda mengkonfirmasi tahap ini!",

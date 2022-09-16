@@ -15,21 +15,63 @@ class Dashboard extends CI_Controller
         $this->load->model('Login_model', 'login');
         $data['user'] = $this->login->getUserLogin();
 
-        $sedang = $this->db->get_where('ltd_order', [
-            'status_verifikasi' => 'Permintaan telah diverifikasi'
-        ]);
-        $data['hsedang'] = $sedang->num_rows();
-        $telah = $this->db->get_where('ltd_order', [
-            'status_verifikasi' => 'Site telah aktif'
-        ]);
-        $data['htelah'] = $telah->num_rows();
-        $belum = $this->db->get_where('ltd_order', ['status_verifikasi' => 'Belum diverifikasi']);
-        $blm = $this->db->get_where('ltd_order', ['status_verifikasi' => 'Dibatalkan']);
-        $data['hbelum'] = $blm->num_rows() + $belum->num_rows();
-        $total = $this->db->get('ltd_order');
-        $data['htotal'] = $total->num_rows();
-        // var_dump($data['htotal']);
-        // die;
+        $data['hsedang'] = 0;
+        $data['htelah'] = 0;
+        $data['htotal'] = 0;
+
+        $this->load->driver('cache', array('adapter' => 'apc', 'backup' => 'file'));
+        $username = 'lutungan_indoutama@yahoo.com';
+        $password = 'IBS2020';
+        $url = 'https://tbm3.ibstower.com/login';
+        $cookie = 'cookie.txt';
+        $url2 = 'https://tbm3.ibstower.com/vendor/project/list_project/3135';
+        $url3 = 'https://tbm3.ibstower.com/vendor/project/project_list/on_process/3135/ALL';
+
+        $postdata = 'identity=' . $username . '&password=' . $password;
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie); // <-- add this line
+        curl_setopt($ch, CURLOPT_REFERER, $url);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
+        $data['status_login'] = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            echo 'Curl error: ' . curl_error($ch);
+            $data['message'] = 'Gagal login';
+            // return (json_encode($data));
+        } else {
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_URL, $url2);
+            curl_setopt($ch, CURLOPT_POST, 0);
+            // $result = json_decode(curl_exec($ch))->data;
+            if (!$result = $this->cache->get('result')) {
+                $result = json_decode(curl_exec($ch))->data;
+                $this->cache->save('result', $result, 60 * 60);
+            }
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_URL, $url3);
+            curl_setopt($ch, CURLOPT_POST, 0);
+            // $result_url3 = json_decode(curl_exec($ch))->data;
+            if (!$result_url3 = $this->cache->get('result_url3')) {
+                $result_url3 = json_decode(curl_exec($ch))->data;
+                $this->cache->save('result_url3', $result_url3, 60 * 60);
+            }
+
+            curl_close($ch);
+
+            $filtered_result = array_filter($result_url3, function ($item) {
+                return in_array($item->assignment_type, ['CME']);
+            });
+
+            foreach ($filtered_result as $row) {
+                floor((time() - strtotime($row->sitac_start_date)) / 86400) >= 45 ? $data['htelah']++ : $data['hsedang']++;
+                $data['htotal']++;
+            }
+        }
 
         $this->load->view('template/index', $data);
     }

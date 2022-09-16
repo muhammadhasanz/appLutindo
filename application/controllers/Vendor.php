@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Administrator extends CI_Controller
+class Vendor extends CI_Controller
 {
     public function __construct()
     {
@@ -11,8 +11,8 @@ class Administrator extends CI_Controller
     }
     public function index()
     {
-        $data['title'] = 'Request';
-        $data['content'] = 'request/index';
+        $data['title'] = 'Projects';
+        $data['content'] = 'admin/projects';
         $this->load->model('Login_model', 'login');
         $data['user'] = $this->login->getUserLogin();
 

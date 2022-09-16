@@ -14,13 +14,15 @@
                             <li class="breadcrumb-item">
                                 <a href="<?= base_url('dashboard'); ?>">Dashboard </a>
                             </li>
-                            <li class="breadcrumb-item active">Projects
+                            <li class="breadcrumb-item">Projects
+                            </li>
+                            <li class="breadcrumb-item active">Projects Progress
                             </li>
                         </ol>
                     </nav><!-- /.breadcrumb -->
                     <!-- title and toolbar -->
                     <div class="d-md-flex align-items-md-start mt-4">
-                        <h1 class="page-title mr-sm-auto"> Projects </h1>
+                        <h1 class="page-title mr-sm-auto"> Projects Progress </h1>
                     </div><!-- /title and toolbar -->
                     <?= $this->session->flashdata('Message') ?>
                 </header><!-- /.page-title-bar -->
@@ -54,6 +56,7 @@
                                         </div><!-- /.input-group -->
                                     </div><!-- /.input-group -->
                                 </div><!-- /.form-group -->
+                                <input type="hidden" id="role-id" value="<?= $user['role_id']; ?>">
                                 <div class="table-responsive">
                                     <!-- .table -->
                                     <table id="myBranch" class="table  table-hover">
@@ -749,7 +752,7 @@
                                     <h6 class="timeline-heading"> TOWER LADDER AND BORDES TOWER </h6><span class="timeline-date d-none"></span>
                                 </div>
                                 <div class="check">
-                                    <label class="switcher-control switcher-control-secondary confirm"><input data-id="20" type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator" style="opacity: 1;"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                    <label class="switcher-control switcher-control-secondary confirm"><input data-id="15" type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator" style="opacity: 1;"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
                                 </div>
                             </div><!-- /.timeline-body -->
                         </li><!-- /.timeline-item -->
@@ -764,7 +767,7 @@
                                     <h6 class="timeline-heading"> HORIZONTAL OUT DOOR CABLE LADDER </h6><span class="timeline-date d-none"></span>
                                 </div>
                                 <div class="check">
-                                    <label class="switcher-control switcher-control-secondary confirm"><input data-id="21" type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator" style="opacity: 1;"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                    <label class="switcher-control switcher-control-secondary confirm"><input data-id="16" type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator" style="opacity: 1;"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
                                 </div>
                             </div><!-- /.timeline-body -->
                         </li><!-- /.timeline-item -->
@@ -779,7 +782,7 @@
                                     <h6 class="timeline-heading"> ANTENNA MOUNTING </h6><span class="timeline-date d-none"></span>
                                 </div>
                                 <div class="check">
-                                    <label class="switcher-control switcher-control-secondary confirm"><input data-id="21" type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator" style="opacity: 1;"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                    <label class="switcher-control switcher-control-secondary confirm"><input data-id="17" type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator" style="opacity: 1;"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
                                 </div>
                             </div><!-- /.timeline-body -->
                         </li><!-- /.timeline-item -->
@@ -794,7 +797,7 @@
                                     <h6 class="timeline-heading"> GPS MOUNTING </h6><span class="timeline-date d-none"></span>
                                 </div>
                                 <div class="check">
-                                    <label class="switcher-control switcher-control-secondary confirm"><input data-id="22" type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator" style="opacity: 1;"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                    <label class="switcher-control switcher-control-secondary confirm"><input data-id="18" type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator" style="opacity: 1;"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
                                 </div>
                             </div><!-- /.timeline-body -->
                         </li><!-- /.timeline-item -->
@@ -809,7 +812,7 @@
                                     <h6 class="timeline-heading"> SITE VIEW </h6><span class="timeline-date d-none"></span>
                                 </div>
                                 <div class="check">
-                                    <label class="switcher-control switcher-control-secondary confirm"><input data-id="27" type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator" style="opacity: 1;"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
+                                    <label class="switcher-control switcher-control-secondary confirm"><input data-id="19" type="checkbox" class="switcher-input" disabled> <span class="switcher-indicator" style="opacity: 1;"></span> <span class="switcher-label-on"><i class="fas fa-check"></i></span> <span class="switcher-label-off"><i class="fas fa-times"></i></span></label>
                                 </div>
                             </div><!-- /.timeline-body -->
                         </li><!-- /.timeline-item -->

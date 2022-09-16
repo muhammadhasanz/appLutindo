@@ -13,13 +13,15 @@
                             <li class="breadcrumb-item">
                                 <a href="<?= base_url('dashboard'); ?>">Dashboard </a>
                             </li>
-                            <li class="breadcrumb-item active">User
+                            <li class="breadcrumb-item"> Users
+                            </li>
+                            <li class="breadcrumb-item active"> List Users
                             </li>
                         </ol>
                     </nav><!-- /.breadcrumb -->
                     <!-- title and toolbar -->
                     <div class="d-md-flex align-items-md-start mt-4">
-                        <h1 class="page-title mr-sm-auto"> User </h1>
+                        <h1 class="page-title mr-sm-auto"> List Users </h1>
                     </div><!-- /title and toolbar -->
                     <?= $this->session->flashdata('Message') ?>
                 </header><!-- /.page-title-bar -->
@@ -60,7 +62,8 @@
                                                             <!-- .modal-header -->
                                                             <div class="modal-header">
                                                                 <h5 id="muser<?= $b['id_user']; ?>Label" class="modal-title">
-                                                                    <i class="fa fa-bullhorn text-warning mr-1"></i> Peringatan </h5>
+                                                                    <i class="fa fa-bullhorn text-warning mr-1"></i> Peringatan
+                                                                </h5>
                                                             </div><!-- /.modal-header -->
                                                             <!-- .modal-body -->
                                                             <div class="modal-body">
