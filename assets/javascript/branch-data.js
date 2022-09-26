@@ -95,7 +95,7 @@ $(window).on('load', function () {
                                 $('.confirm').addClass('d-none')
                             } else {
                                 $('.confirm').addClass('d-none')
-                                if ($('#role-id').val() != 5) {
+                                if ($('#role-id').val() != "5") {
                                     $('[data-id="1"]').parent().removeClass('d-none')
                                 }
                             }
@@ -114,42 +114,42 @@ $(window).on('load', function () {
                                 $('.timeline-date').html(data.work_status == "DONE" ? `${tgl_sitac[2]}/${tgl_sitac[1]}/${tgl_sitac[0]} - 15:01` : '')
                                 $('.confirm').addClass('d-none')
                                 $.each(result.check_site, (key, value) => {
-                                    const event = new Date(value.updated_at).toLocaleString().split(' ');
-                                    const date_time = event[1].split('.');
+                                    const event = new Date(value.updated_at).toLocaleString("en-GB").split(', ');
                                     if (value.status == 1) {
-                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').html(`${event[0]} - ${date_time[0]}:${date_time[1]}`)
+                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').html(`${event[0]} - ${event[1]}`)
                                     }
                                 })
                             } else {
                                 $('.confirm').addClass('d-none')
                                 let last = 0
                                 let site_length = 0
-                                $.each(result.check_site, (key, value) => {
-                                    const event = new Date(value.updated_at).toLocaleString().split(' ');
-                                    const date_time = event[1].split('.');
-                                    if (value.status == 1) {
-                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.tile-circle').addClass('bg-success')
-                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-figure .fa-check').removeClass('d-none')
-                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-figure .fa-check').addClass('d-print-none')
-                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').removeClass('d-none')
-                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').html(`${event[0]} - ${date_time[0]}:${date_time[1]}`)
-                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').addClass('d-print-none')
-                                        site_length++
-                                    }
-                                    $(`[data-id="${value.tahap_id}"]`).parent().removeClass('d-none')
-                                    $(`[data-id="${value.tahap_id}"]`).prop('checked', value.status == 1 ? true : false)
-                                    if (value.status == 0) {
-                                        return false
-                                    } else {
-                                        last = parseInt(value.tahap_id) + 1
-                                    }
-                                })
-                                var progress = Math.floor(site_length / (result.check_site[0].site_type == 'Greenfield' ? 27 : 19) * 100)
-                                $('[role="progressbar"]').css('width', `${progress}%`)
-                                $('[role="progressbar"]').html(`${progress}%`)
-                                // console.log(last)
-                                if (last != 0)
-                                    $(`[data-id="${last}"]`).parent().removeClass('d-none')
+                                if ($('#role-id').val() != "5") {
+                                    $.each(result.check_site, (key, value) => {
+                                        const event = new Date(value.updated_at).toLocaleString("en-GB").split(', ');
+                                        if (value.status == 1) {
+                                            $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.tile-circle').addClass('bg-success')
+                                            $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-figure .fa-check').removeClass('d-none')
+                                            $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-figure .fa-check').addClass('d-print-none')
+                                            $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').removeClass('d-none')
+                                            $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').html(`${event[0]} - ${event[1]}`)
+                                            $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').addClass('d-print-none')
+                                            site_length++
+                                        }
+                                        $(`[data-id="${value.tahap_id}"]`).parent().removeClass('d-none')
+                                        $(`[data-id="${value.tahap_id}"]`).prop('checked', value.status == 1 ? true : false)
+                                        if (value.status == 0) {
+                                            return false
+                                        } else {
+                                            last = parseInt(value.tahap_id) + 1
+                                        }
+                                    })
+                                    var progress = Math.floor(site_length / (result.check_site[0].site_type == 'Greenfield' ? 27 : 19) * 100)
+                                    $('[role="progressbar"]').css('width', `${progress}%`)
+                                    $('[role="progressbar"]').html(`${progress}%`)
+                                    // console.log(last)
+                                    if (last != 0)
+                                        $(`[data-id="${last}"]`).parent().removeClass('d-none')
+                                }
                             }
                         }
                         // console.log(data.work_status)
@@ -248,14 +248,14 @@ $(window).on('load', function () {
                             let last = 0
                             let site_length = 0
                             $.each(result.check_site, (key, value) => {
-                                const event = new Date(value.updated_at).toLocaleString().split(' ');
+                                const event = new Date(value.updated_at).toLocaleString("en-GB").split(', ');
                                 const date_time = event[1].split('.');
                                 if (value.status == 1) {
                                     $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.tile-circle').addClass('bg-success')
                                     $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-figure .fa-check').removeClass('d-none')
                                     $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-figure .fa-check').addClass('d-print-none')
                                     $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').removeClass('d-none')
-                                    $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').html(`${event[0]} - ${date_time[0]}:${date_time[1]}`)
+                                    $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').html(`${event[0]} - ${event[1]}`)
                                     $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').addClass('d-print-none')
                                     site_length++
                                 }
