@@ -10,8 +10,8 @@ class Projects extends CI_Controller
     }
     public function index()
     {
-        $data['title'] = 'Proses Kemajuan';
-        $data['content'] = 'manager/jadwal';
+        $data['title'] = 'Project Progress';
+        $data['content'] = 'admin/project-progress';
         $this->load->model('Login_model', 'login');
         $data['user'] = $this->login->getUserLogin();
 
@@ -166,19 +166,19 @@ class Projects extends CI_Controller
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_URL, $url2);
             curl_setopt($ch, CURLOPT_POST, 0);
+            $result = json_decode(curl_exec($ch))->data;
+            // if (!$result = $this->cache->get('result')) {
             // $result = json_decode(curl_exec($ch))->data;
-            if (!$result = $this->cache->get('result')) {
-                $result = json_decode(curl_exec($ch))->data;
-                $this->cache->save('result', $result, 60 * 60);
-            }
+            // $this->cache->save('result', $result, 60 * 60);
+            // }
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_URL, $url3);
             curl_setopt($ch, CURLOPT_POST, 0);
-            // $result_url3 = json_decode(curl_exec($ch))->data;
-            if (!$result_url3 = $this->cache->get('result_url3')) {
-                $result_url3 = json_decode(curl_exec($ch))->data;
-                $this->cache->save('result_url3', $result_url3, 60 * 60);
-            }
+            $result_url3 = json_decode(curl_exec($ch))->data;
+            // if (!$result_url3 = $this->cache->get('result_url3')) {
+            //     $result_url3 = json_decode(curl_exec($ch))->data;
+            //     $this->cache->save('result_url3', $result_url3, 60 * 60);
+            // }
 
             curl_close($ch);
 
@@ -188,7 +188,7 @@ class Projects extends CI_Controller
 
             foreach ($filtered_result as $row) {
                 // $filtered = array_search($row->site_id_ibs, array_column($result_url3, 'site_id_ibs'));
-                $filtered = $this->array_recursive_search_key_map($row->site_id_ibs, $result) ?? null;
+                $filtered = $this->array_recursive_search_key_map($row->site_id_ibs, $result);
                 $data_row[] = [
                     'id' => $row->id,
                     'wbs_id' => $row->wbs_id,
@@ -197,10 +197,10 @@ class Projects extends CI_Controller
                     'site_name' => $row->site_name,
                     'sitac_start_date' => $row->sitac_start_date,
                     'work_status' => floor((time() - strtotime($row->sitac_start_date)) / 86400) >= 45 ? 'DONE' : 'RUNNING',
-                    'site_type' => $filtered->site_type ?? null == 'GF' ? 'Greenfield' : 'Rooftop'
+                    'site_type' => ($filtered->site_type ?? "Null") == "GF" ? "Greenfield" : "Rooftop"
                 ];
             }
-
+            // ?? null == 'GF' ? 'Greenfield' : 'Rooftop'
             $data['message'] = 'Berhasil Mendapatkan API';
             $data['data'] = $data_row;
             echo (json_encode($data));
@@ -240,7 +240,7 @@ class Projects extends CI_Controller
             // $result = json_decode(curl_exec($ch))->data;
             if (!$result = $this->cache->get('newsite')) {
                 $result = json_decode(curl_exec($ch))->data;
-                $this->cache->save('result', $result, 60 * 60);
+                $this->cache->save('newsite', $result, 60 * 60);
             }
 
             curl_close($ch);
@@ -273,17 +273,94 @@ class Projects extends CI_Controller
     }
     public function getdatasite()
     {
-        $site_id = $this->input->post('site_id');
-        $data['check_site'] = $this->db->get_where('check_site', ['site_id' => $site_id])->result();
-        echo (json_encode($data));
+        $this->load->driver('cache', array('adapter' => 'apc', 'backup' => 'file'));
+        $username = 'lutungan_indoutama@yahoo.com';
+        $password = 'IBS2020';
+        $url = 'https://tbm3.ibstower.com/login';
+        $cookie = 'cookie.txt';
+        $url2 = 'https://tbm3.ibstower.com/vendor/project/details/' . $this->input->post('id') . '/3135';
+        $url3 = 'https://tbm3.ibstower.com/vendor/bill/index/' . $this->input->post('id');
+
+
+        $postdata = 'identity=' . $username . '&password=' . $password;
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie); // <-- add this line
+        curl_setopt($ch, CURLOPT_REFERER, $url);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
+        $data['status_login'] = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            echo 'Curl error: ' . curl_error($ch);
+            $data['message'] = 'Gagal login';
+            // return (json_encode($data));
+        } else {
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_URL, $url2);
+            curl_setopt($ch, CURLOPT_POST, 0);
+            // $result = json_decode(curl_exec($ch))->data;
+            $result = curl_exec($ch);
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_URL, $url3);
+            curl_setopt($ch, CURLOPT_POST, 0);
+            // $result = json_decode(curl_exec($ch))->data;
+            $result1 = curl_exec($ch);
+
+            curl_close($ch);
+            preg_match_all('/<td>(.*?)<\/td>/i', trim($result), $matches);
+            preg_match('/<a href="(.*?)" target="_blank" class="btn btn-sm btn-icon btn-light">/i', $result1, $matches2);
+            // var_dump($result1);
+            // var_dump($matches2);
+            // var_dump($matches);
+            // var_dump($this->input->post('id'));
+            // die;
+
+            $data['message'] = 'Berhasil Mendapatkan API';
+            $data['data'] = $matches[1] ?? NULL;
+            $data['biaya'] = $matches2[1] ?? NULL;
+            $site_id = $this->input->post('site_id');
+            $data['check_site'] = $this->db->get_where('check_site', ['site_id' => $site_id])->result();
+            // var_dump($data);
+            // die;
+            echo (json_encode($data));
+        }
     }
     public function checksite()
     {
         $this->load->driver('cache', array('adapter' => 'apc', 'backup' => 'file'));
+
+        $upload_image = $_FILES['dokumentasi']['name'] ?? false;
+        $file_dokumentasi = '';
+        // echo json_encode($upload_image);
+        // echo json_encode($this->input->post());
+        // die;
+        if ($upload_image) {
+            $config['upload_path'] = './assets/images/dokumentasi/';
+            $config['allowed_types'] = 'jpg|png|jpeg';
+            $config['max_size']     = '10240';
+
+            $this->load->library('upload', $config);
+
+            if ($this->upload->do_upload('dokumentasi')) {
+                $file_dokumentasi = $this->upload->data('file_name');
+            } else {
+                echo $this->upload->display_errors();
+            }
+        }
+        // die;
+
         $site_id = $this->input->post('site_id');
         $tahap_id = $this->input->post('tahap_id');
         $site_type = $this->input->post('site_type');
         $status = $this->input->post('status');
+        $catatan = $this->input->post('catatan');
+        // var_dump($this->cache->get('result_url3'));
+        // die;
         $filtered_assignment_type = array_filter($this->cache->get('result_url3'), function ($item) {
             return in_array($item->assignment_type, ['CME']);
         });
@@ -297,12 +374,14 @@ class Projects extends CI_Controller
         $data_site = [
             'site_id' => $site_id,
             'site_type' => $site_type,
-            'status' => $status
+            'status' => $status,
+            'file_dokumentasi' => $file_dokumentasi == '' ? NULL : $file_dokumentasi,
+            'catatan' => $catatan == '' ? NULL : $catatan
         ];
         // return $status;
 
         if (count($check_site) > 0) {
-            $data_site['updated_at'] = date('Y-m-d H:i:s', strtotime($sitac_start_date) + (86400 * 44));
+            $data_site['updated_at'] = date('Y-m-d H:i:s', time());
             if ($status == 1) {
                 $this->db->where(['site_id' => $site_id, 'tahap_id' => $tahap_id])->update('check_site', $data_site);
             } else {
@@ -311,7 +390,7 @@ class Projects extends CI_Controller
         } else {
             $data_site['tahap_id'] = $tahap_id;
             $data_site['created_at'] = date('Y-m-d H:i:s', strtotime($sitac_start_date) + (86400 * 44));
-            $data_site['updated_at'] = date('Y-m-d H:i:s', strtotime($sitac_start_date) + (86400 * 44));
+            $data_site['updated_at'] = date('Y-m-d H:i:s', time());
             $this->db->insert('check_site', $data_site);
         }
 

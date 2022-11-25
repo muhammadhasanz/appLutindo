@@ -1,4 +1,51 @@
+function showPreview(event) {
+    if (event.target.files.length > 0) {
+        var src = URL.createObjectURL(event.target.files[0]);
+        var preview = document.getElementById("img-preview");
+        if (isImage(event.target.files[0].name)) {
+            preview.src = src;
+            preview.style.display = "block";
+        } else {
+            $('#dokumentasi').addClass('is-invalid')
+            $('#dokumentasi').after(`<div class="invalid-feedback">
+            <i class="fa fa-exclamation-circle fa-fw"></i> File harus berupa gambar dengan tipe png, jpg, jpeg.
+        </div>`)
+        }
+
+    }
+}
+
+function isImage(filename) {
+    var ext = getExtension(filename);
+    switch (ext.toLowerCase()) {
+        case 'jpg':
+        case 'jpeg':
+        case 'png':
+            //etc
+            return true;
+    }
+    return false;
+}
+function getExtension(filename) {
+    var parts = filename.split('.');
+    return parts[parts.length - 1];
+}
+
+function lihatFile(url) {
+    var height = 500
+    var width = 800
+    var top = parseInt((screen.availHeight) - height - 100);
+    var left = parseInt((screen.availWidth) - width - 300);
+    var features = "location=1, status=1, scrollbars=1, width=" + width + ", height=" + height + ", top=" + top + ", left=" + left;
+    console.log(url)
+
+    window.open(url, "RincianBiaya", features);
+}
+
 $(window).on('load', function () {
+    lightbox.option({
+        'showImageNumberLabel': false
+    })
 
     var indicator = true
 
@@ -13,7 +60,7 @@ $(window).on('load', function () {
         ajax: 'projects/getbranchdata',
         deferRender: true,
         "drawCallback": function () {
-            $('tbody > tr').css('cursor', 'pointer');
+            $(this).find('tr').css('cursor', 'pointer');
         },
         columns: [{
             data: 'wbs_id',
@@ -41,6 +88,7 @@ $(window).on('load', function () {
         "order": [[5, 'dsc']],
         initComplete: function (settings, json) {
             myBranch.on('click', 'tbody tr', function () {
+                $('.site_data').html('')
                 var data = myBranch.row(this).data();
                 console.log(data)
                 tgl_sitac = data.sitac_start_date.split('-')
@@ -71,14 +119,37 @@ $(window).on('load', function () {
                 $('.confirm').css('cursor', 'pointer')
                 $('.switcher-indicator').css('cursor', 'pointer')
                 $('.confirm').removeClass('d-none')
+                $(`#site_0`).html('-')
+                $(`#site_1`).html('-')
+                $(`#site_2`).html('-')
+                $(`biaya-null`).show()
+                $('#rincian-biaya').hide()
+                $('.oi-magnifying-glass').removeAttr('onclick')
+                $('.oi-magnifying-glass').addClass('d-none')
+                $('.timeline-item').find('a').removeAttr('data-lightbox')
+                $('.timeline-item').find('a').removeAttr('href')
+                $('.timeline-item').find('a').removeAttr('data-title')
                 $.ajax({
                     type: "POST",
                     url: `${window.location.href}/getdatasite`,
                     data: ({
+                        id: data.id,
                         site_id: data.site_id_ibs
                     }),
                     dataType: "json",
                     success: function (result) {
+                        console.log(result.biaya)
+                        $.each(result.data, (key, value) => {
+                            $(`#site_${key}`).html(`${value}`)
+                        })
+                        if (result.biaya) {
+                            $('#rincian-biaya').attr('onclick', `lihatFile('${result.biaya}')`)
+                            $('#rincian-biaya').show()
+                            $(`#biaya-null`).hide()
+                        } else {
+                            $('#rincian-biaya').hide()
+                            $(`#biaya-null`).show()
+                        }
                         if (result.check_site.length == 0) {
                             if (data.work_status == "DONE") {
                                 indicator = false
@@ -116,7 +187,7 @@ $(window).on('load', function () {
                                 $.each(result.check_site, (key, value) => {
                                     const event = new Date(value.updated_at).toLocaleString("en-GB").split(', ');
                                     if (value.status == 1) {
-                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').html(`${event[0]} - ${event[1]}`)
+                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').html(`${event[0]}`)
                                     }
                                 })
                             } else {
@@ -131,9 +202,16 @@ $(window).on('load', function () {
                                             $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-figure .fa-check').removeClass('d-none')
                                             $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-figure .fa-check').addClass('d-print-none')
                                             $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').removeClass('d-none')
-                                            $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').html(`${event[0]} - ${event[1]}`)
+                                            $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').html(`${event[0]}`)
                                             $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').addClass('d-print-none')
                                             site_length++
+                                            if (value.file_dokumentasi != null) {
+                                                // $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.oi-magnifying-glass').attr('onclick', `lihatFile('${window.location.origin}/assets/images/dokumentasi/${value.file_dokumentasi}')`)
+                                                $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.oi-magnifying-glass').removeClass('d-none')
+                                                $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('a').attr('data-lightbox', value.site_type)
+                                                $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('a').attr('href', `${window.location.origin}/assets/images/dokumentasi/${value.file_dokumentasi}`)
+                                                $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('a').attr('data-title', `Catatan :  ${value.catatan ?? '-'}`)
+                                            }
                                         }
                                         $(`[data-id="${value.tahap_id}"]`).parent().removeClass('d-none')
                                         $(`[data-id="${value.tahap_id}"]`).prop('checked', value.status == 1 ? true : false)
@@ -171,7 +249,7 @@ $(window).on('load', function () {
         ajax: `${window.origin}/projects/getnewsite`,
         deferRender: true,
         "drawCallback": function () {
-            $('tbody > tr').css('cursor', 'pointer');
+            $(this).find('tr').css('cursor', 'pointer');
         },
         columns: [{
             data: 'wbs_id',
@@ -204,90 +282,192 @@ $(window).on('load', function () {
     $('#table-search').keyup(function () {
         myBranch.columns(parseInt($('#column').val())).search(this.value).draw();
     })
+    const buttonSwal = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-subtle-success mr-2',
+            cancelButton: 'btn btn-subtle-danger'
+        },
+
+        buttonsStyling: false
+    })
 
     $('.confirm').on('click', function () {
-        const buttonSwal = Swal.mixin({
-            customClass: {
-                confirmButton: 'btn btn-subtle-success mr-2',
-                cancelButton: 'btn btn-subtle-danger'
-            },
-
-            buttonsStyling: false
-        })
         if (indicator) {
+            $('#formKonfir')[0].reset();
+            $('#dokumentasi').removeClass('is-invalid')
+            $('#dokumentasi').val('');
+            $('.custom-file-label').html('Pilih File')
+            $('.invalid-feedback').remove()
+            $("#img-preview").removeAttr('src')
             // console.log($(this).find('.switcher-input').prop("checked") ? 0 : 1)
             var status = $(this).find('.switcher-input').prop("checked") ? 0 : 1
+            $('#status').val(status)
+            $('#tahap_id').val($(this).find('.switcher-input').data('id'))
 
-            buttonSwal.fire({
-                title: 'Apakah anda yakin?',
-                text: $(this).find('.switcher-input').prop("checked") ? "Anda membatalkan konfirmasi tahap ini" : "Anda mengkonfirmasi tahap ini!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: $(this).find('.switcher-input').prop("checked") ? 'Ya, batalkan!' : 'Ya, konfirmasi!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        type: "POST",
-                        url: `${window.location.href}/checksite`,
-                        data: ({
-                            site_id: $("#site_id").val(),
-                            site_type: $("#site_type").val(),
-                            tahap_id: $(this).find('.switcher-input').data('id'),
-                            status: status
-                        }),
-                        dataType: "json",
-                        success: function (result) {
-                            console.log(result)
-                            $('.timeline-figure .fa-check').addClass('d-none')
-                            $('.timeline-date').removeClass('d-print-none')
-                            $('.timeline-date').addClass('d-none')
-                            $('.tile-circle').removeClass('bg-success')
-                            $('.confirm').addClass('d-none')
-                            let last = 0
-                            let site_length = 0
-                            $.each(result.check_site, (key, value) => {
-                                const event = new Date(value.updated_at).toLocaleString("en-GB").split(', ');
-                                const date_time = event[1].split('.');
-                                if (value.status == 1) {
-                                    $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.tile-circle').addClass('bg-success')
-                                    $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-figure .fa-check').removeClass('d-none')
-                                    $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-figure .fa-check').addClass('d-print-none')
-                                    $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').removeClass('d-none')
-                                    $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').html(`${event[0]} - ${event[1]}`)
-                                    $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').addClass('d-print-none')
-                                    site_length++
+            if (!status) {
+                buttonSwal.fire({
+                    title: 'Apakah anda yakin?',
+                    text: "Anda membatalkan konfirmasi tahap ini!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, batalkan!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "POST",
+                            url: `${window.location.href}/checksite`,
+                            data: ({
+                                site_id: $("#site_id").val(),
+                                site_type: $("#site_type").val(),
+                                tahap_id: $(this).find('.switcher-input').data('id'),
+                                status: status
+                            }),
+                            dataType: "json",
+                            success: function (result) {
+                                console.log(result)
+                                $('.timeline-figure .fa-check').addClass('d-none')
+                                $('.timeline-date').removeClass('d-print-none')
+                                $('.timeline-date').addClass('d-none')
+                                $('.tile-circle').removeClass('bg-success')
+                                $('.confirm').addClass('d-none')
+                                $('.oi-magnifying-glass').addClass('d-none')
+                                $('.timeline-item').find('a').removeAttr('data-lightbox')
+                                $('.timeline-item').find('a').removeAttr('href')
+                                $('.timeline-item').find('a').removeAttr('data-title')
+                                let last = 0
+                                let site_length = 0
+                                $.each(result.check_site, (key, value) => {
+                                    const event = new Date(value.updated_at).toLocaleString("en-GB").split(', ');
+                                    const date_time = event[1].split('.');
+                                    if (value.status == 1) {
+                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.tile-circle').addClass('bg-success')
+                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-figure .fa-check').removeClass('d-none')
+                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-figure .fa-check').addClass('d-print-none')
+                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').removeClass('d-none')
+                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').html(`${event[0]}`)
+                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').addClass('d-print-none')
+                                        site_length++
+                                        if (value.file_dokumentasi != null) {
+                                            // $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.oi-magnifying-glass').attr('onclick', `lihatFile('${window.location.origin}/assets/images/dokumentasi/${value.file_dokumentasi}')`)
+                                            $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.oi-magnifying-glass').removeClass('d-none')
+                                            $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('a').attr('data-lightbox', value.site_type)
+                                            $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('a').attr('href', `${window.location.origin}/assets/images/dokumentasi/${value.file_dokumentasi}`)
+                                            $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('a').attr('data-title', `Catatan :  ${value.catatan ?? '-'}`)
+                                        }
+                                    }
+                                    $(`[data-id="${value.tahap_id}"]`).parent().removeClass('d-none')
+                                    $(`[data-id="${value.tahap_id}"]`).prop('checked', true)
+                                    if (value.status == 0) {
+                                        last = parseInt(value.tahap_id)
+                                        return false
+                                    } else {
+                                        last = parseInt(value.tahap_id) + 1
+                                    }
+                                })
+                                var progress = Math.floor(site_length / (result.check_site[0].site_type == 'Greenfield' ? 27 : 19) * 100)
+                                $('[role="progressbar"]').css('width', `${progress}%`)
+                                $('[role="progressbar"]').html(`${progress}%`)
+                                console.log(last)
+                                if (last != 0) {
+                                    $(`[data-id="${last}"]`).parent().removeClass('d-none')
+                                    $(`[data-id="${last}"]`).prop('checked', false)
                                 }
-                                $(`[data-id="${value.tahap_id}"]`).parent().removeClass('d-none')
-                                $(`[data-id="${value.tahap_id}"]`).prop('checked', true)
-                                if (value.status == 0) {
-                                    last = parseInt(value.tahap_id)
-                                    return false
-                                } else {
-                                    last = parseInt(value.tahap_id) + 1
-                                }
-                            })
-                            var progress = Math.floor(site_length / (result.check_site[0].site_type == 'Greenfield' ? 27 : 19) * 100)
-                            $('[role="progressbar"]').css('width', `${progress}%`)
-                            $('[role="progressbar"]').html(`${progress}%`)
-                            console.log(last)
-                            if (last != 0) {
-                                $(`[data-id="${last}"]`).parent().removeClass('d-none')
-                                $(`[data-id="${last}"]`).prop('checked', false)
+                                buttonSwal.fire("Dibatalkan", "Tahap telah dibatalkan!", 'success')
                             }
-                            buttonSwal.fire(
-                                $(this).find('.switcher-input').prop("checked") ? "Dibatalkan" : 'Dikonfirmasi!',
-                                $(this).find('.switcher-input').prop("checked") ? "Tahap telah dibatalkan" : 'Tahap telah dikonfirmasi.',
-                                'success'
-                            )
-                        }
-                    });
-                }
-            })
+                        });
+                    }
+                })
+            } else {
+                $('#konfirmasiSite').modal()
+            }
+
+
 
         }
     })
+
+    $('#dokumentasi').on('click', function () {
+        $(this).removeClass('is-invalid')
+        $(this).val('');
+        $('.custom-file-label').html('Pilih File')
+        $('.invalid-feedback').remove()
+        $("#img-preview").removeAttr('src')
+    })
+
+    $('#formKonfir').on('submit', function (event) {
+        event.preventDefault()
+        if ($('#dokumentasi').val() == '') {
+            $('#dokumentasi').addClass('is-invalid')
+            $('#dokumentasi').after(`<div class="invalid-feedback">
+            <i class="fa fa-exclamation-circle fa-fw"></i> Pilih file dokumentasi terlebih dahulu.
+        </div>`)
+        } else {
+            $.ajax({
+                processData: false,
+                contentType: false,
+                url: `${window.location.href}/checksite`,
+                method: 'POST', dataType: "json",
+                data: new FormData(this),
+                success: function (result) {
+                    console.log(result);
+                    $('.timeline-figure .fa-check').addClass('d-none')
+                    $('.timeline-date').removeClass('d-print-none')
+                    $('.timeline-date').addClass('d-none')
+                    $('.tile-circle').removeClass('bg-success')
+                    $('.confirm').addClass('d-none')
+                    $('.timeline-item').find('a').removeAttr('data-lightbox')
+                    $('.timeline-item').find('a').removeAttr('href')
+                    $('.timeline-item').find('a').removeAttr('data-title')
+                    let last = 0
+                    let site_length = 0
+                    $.each(result.check_site, (key, value) => {
+                        const event = new Date(value.updated_at).toLocaleString("en-GB").split(', ');
+                        const date_time = event[1].split('.');
+                        if (value.status == 1) {
+                            $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.tile-circle').addClass('bg-success')
+                            $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-figure .fa-check').removeClass('d-none')
+                            $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-figure .fa-check').addClass('d-print-none')
+                            $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').removeClass('d-none')
+                            $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').html(`${event[0]}`)
+                            $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').addClass('d-print-none')
+                            site_length++
+                            //     if (value.file_dokumentasi != null) {
+                            // $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.oi-magnifying-glass').attr('onclick', `lihatFile('${window.location.origin}/assets/images/dokumentasi/${value.file_dokumentasi}')`)
+                            $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('a').attr('data-lightbox', value.site_type)
+                            $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('a').attr('href', `${window.location.origin}/assets/images/dokumentasi/${value.file_dokumentasi}`)
+                            $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('a').attr('data-title', `Catatan :  ${value.catatan ?? '-'}`)
+                            $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.oi-magnifying-glass').removeClass('d-none')
+                            //     }
+                        }
+                        $(`[data-id="${value.tahap_id}"]`).parent().removeClass('d-none')
+                        $(`[data-id="${value.tahap_id}"]`).prop('checked', true)
+                        if (value.status == 0) {
+                            last = parseInt(value.tahap_id)
+                            return false
+                        } else {
+                            last = parseInt(value.tahap_id) + 1
+                        }
+                    })
+                    var progress = Math.floor(site_length / (result.check_site[0].site_type == 'Greenfield' ? 27 : 19) * 100)
+                    $('[role="progressbar"]').css('width', `${progress}%`)
+                    $('[role="progressbar"]').html(`${progress}%`)
+                    console.log(last)
+                    if (last != 0) {
+                        $(`[data-id="${last}"]`).parent().removeClass('d-none')
+                        $(`[data-id="${last}"]`).prop('checked', false)
+                    }
+                    $('#formKonfir')[0].reset();
+                    $('.custom-file-label').html('Pilih File')
+                    $("#img-preview").removeAttr('src')
+                    $('#konfirmasiSite').modal('hide')
+                    buttonSwal.fire('Dikonfirmasi!', 'Tahap telah dikonfirmasi.', 'success')
+                }
+            });
+        }
+    })
+
 
     // myBranch.on('click', 'tbody tr td', function () {
     // $.ajax({

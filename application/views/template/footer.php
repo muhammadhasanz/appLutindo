@@ -22,6 +22,8 @@
 <script src="<?= base_url(); ?>assets/vendor/datatables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url(); ?>assets/vendor/datatables/extensions/buttons/dataTables.buttons.min.js"></script>
 <script src="<?= base_url(); ?>assets/vendor/bootstrap-session-timeout/bootstrap-session-timeout.min.js"></script><!-- END PLUGINS JS -->
+<script src="<?= base_url(); ?>assets/vendor/photoswipe/photoswipe.min.js"></script>
+<script src="<?= base_url(); ?>assets/vendor/photoswipe/photoswipe-ui-default.min.js"></script>
 <!-- BEGIN THEME JS -->
 <script src="<?= base_url(); ?>assets/javascript/theme.min.js"></script> <!-- END THEME JS -->
 <!-- BEGIN PAGE LEVEL JS -->
@@ -52,6 +54,8 @@
     <script src="<?= base_url(); ?>assets/javascript/pages/datatables-filters-demo.js"></script>
 <?php elseif ($this->uri->segment(1) == 'projects') : ?>
     <script src="<?= base_url(); ?>assets/javascript/branch-data.js"></script>
+    <script src="<?= base_url(); ?>assets/vendor/lightbox/js/lightbox.min.js"></script>
+    <!-- <script src="<?= base_url(); ?>assets/javascript/pages/photoswipe-demo.js"></script> END PAGE LEVEL JS -->
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="<?= base_url(); ?>assets/javascript/pages/datatables-filters-demo.js"></script>
 <?php elseif ($this->uri->segment(1) == 'sites') : ?>

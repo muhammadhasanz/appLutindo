@@ -50,15 +50,15 @@ class Dashboard extends CI_Controller
             // $result = json_decode(curl_exec($ch))->data;
             if (!$result = $this->cache->get('result_dash')) {
                 $result = json_decode(curl_exec($ch))->data;
-                $this->cache->save('result', $result, 60 * 60);
+                $this->cache->save('result_dash', $result, 60 * 60 * 24);
             }
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_URL, $url3);
             curl_setopt($ch, CURLOPT_POST, 0);
             // $result_url3 = json_decode(curl_exec($ch))->data;
-            if (!$result_url3 = $this->cache->get('result_url3_dash')) {
+            if (!$result_url3 = $this->cache->get('result_url3')) {
                 $result_url3 = json_decode(curl_exec($ch))->data;
-                $this->cache->save('result_url3', $result_url3, 60 * 60);
+                $this->cache->save('result_url3', $result_url3, 60 * 60 * 24);
             }
 
             curl_close($ch);

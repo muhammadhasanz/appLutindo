@@ -3,22 +3,22 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Auth extends CI_Controller
 {
-	public function index()
-	{
-		if ($this->session->userdata('username')) {
-			redirect('dashboard');
-		}
-
-		$this->form_validation->set_rules('username', 'Username', 'trim|required');
-		$this->form_validation->set_rules('password', 'Password', 'trim|required');
-
-		if ($this->form_validation->run() == FALSE) {
-
-			$this->load->view('auth/masuk');
-		} else {
-			$this->_masuk();
-		}
+public function index()
+{
+	if ($this->session->userdata('username')) {
+		redirect('dashboard');
 	}
+
+	$this->form_validation->set_rules('username', 'Username', 'trim|required');
+	$this->form_validation->set_rules('password', 'Password', 'trim|required');
+
+	if ($this->form_validation->run() == FALSE) {
+
+		$this->load->view('auth/masuk');
+	} else {
+		$this->_masuk();
+	}
+}
 	private function _masuk()
 	{
 		$username = $this->input->post('username');
