@@ -273,7 +273,6 @@ class Projects extends CI_Controller
     }
     public function getdatasite()
     {
-        $this->load->driver('cache', array('adapter' => 'apc', 'backup' => 'file'));
         $username = 'lutungan_indoutama@yahoo.com';
         $password = 'IBS2020';
         $url = 'https://tbm3.ibstower.com/login';

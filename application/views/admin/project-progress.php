@@ -184,7 +184,7 @@
                             <p class="text-muted text-weight-bolder small mb-0" id="site-id"></p>
                             <table class="mt-2" width="100%" style="font-size: 14px;">
                                 <tr>
-                                    <td style="vertical-align: top; width: 80px; max-width:80px;">Long/Lat&nbsp;</td>
+                                    <td style="vertical-align: top; width: 100px; max-width:100px;">Long/Lat&nbsp;</td>
                                     <td style="vertical-align: top; width: 20px; max-width:20px;">&nbsp;:&nbsp;&nbsp;</td>
                                     <td id="site_0" class="site_data text-break">-</td>
                                 </tr>

@@ -43,8 +43,6 @@
     <link rel="stylesheet" href="<?= base_url(); ?>assets/vendor/flatpickr/flatpickr.min.css">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/vendor/datatables/extensions/responsive/responsive.bootstrap4.min.css">
     <link href="<?= base_url() ?>assets/vendor/lightbox/css/lightbox.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="<?= base_url(); ?>assets/vendor/photoswipe/photoswipe.css">
-    <link rel="stylesheet" href="<?= base_url(); ?>assets/vendor/photoswipe/photoswipe-skin/default-skin.css">
     <!-- BEGIN THEME STYLES -->
     <link rel="stylesheet" href="<?= base_url(); ?>assets/stylesheets/theme.min.css" data-skin="default">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/stylesheets/theme-dark.min.css" data-skin="dark">

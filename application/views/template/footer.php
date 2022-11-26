@@ -22,8 +22,6 @@
 <script src="<?= base_url(); ?>assets/vendor/datatables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url(); ?>assets/vendor/datatables/extensions/buttons/dataTables.buttons.min.js"></script>
 <script src="<?= base_url(); ?>assets/vendor/bootstrap-session-timeout/bootstrap-session-timeout.min.js"></script><!-- END PLUGINS JS -->
-<script src="<?= base_url(); ?>assets/vendor/photoswipe/photoswipe.min.js"></script>
-<script src="<?= base_url(); ?>assets/vendor/photoswipe/photoswipe-ui-default.min.js"></script>
 <!-- BEGIN THEME JS -->
 <script src="<?= base_url(); ?>assets/javascript/theme.min.js"></script> <!-- END THEME JS -->
 <!-- BEGIN PAGE LEVEL JS -->
