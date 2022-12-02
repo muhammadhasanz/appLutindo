@@ -186,6 +186,8 @@ class Projects extends CI_Controller
                 return in_array($item->assignment_type, ['CME']);
             });
 
+            $site_running = ['SN-1098-T-B', 'SN-1095-T-B', 'SN-0928-T-B'];
+
             foreach ($filtered_result as $row) {
                 // $filtered = array_search($row->site_id_ibs, array_column($result_url3, 'site_id_ibs'));
                 $filtered = $this->array_recursive_search_key_map($row->site_id_ibs, $result);
@@ -196,7 +198,7 @@ class Projects extends CI_Controller
                     'site_id_ibs' => $row->site_id_ibs,
                     'site_name' => $row->site_name,
                     'sitac_start_date' => $row->sitac_start_date,
-                    'work_status' => floor((time() - strtotime($row->sitac_start_date)) / 86400) >= 45 ? 'DONE' : 'RUNNING',
+                    'work_status' => floor((time() - strtotime($row->sitac_start_date)) / 86400) >= 45 && !in_array($row->site_id_ibs, $site_running) ? 'DONE' : 'RUNNING',
                     'site_type' => ($filtered->site_type ?? "Null") == "GF" ? "Greenfield" : "Rooftop"
                 ];
             }

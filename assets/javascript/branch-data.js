@@ -1,5 +1,6 @@
 function showPreview(event) {
     if (event.target.files.length > 0) {
+        console.log(event.target.files[0])
         var src = URL.createObjectURL(event.target.files[0]);
         var preview = document.getElementById("img-preview");
         if (isImage(event.target.files[0].name)) {
@@ -46,6 +47,22 @@ $(window).on('load', function () {
     lightbox.option({
         'showImageNumberLabel': false
     })
+    // fetch('https://tbm3.ibstower.com/uploads/boq/d6d9227f4c0b2d6fbb4b0ebb0c1457ab.pdf')
+    //     .then(resp => resp.blob())
+    //     .then(blob => {
+    //         const url = window.URL.createObjectURL(blob);
+    //         console.log(url)
+    // const a = document.createElement('a');
+    // a.style.display = 'none';
+    // a.href = url;
+    // // the filename you want
+    // a.download = 'todo-1.json';
+    // document.body.appendChild(a);
+    // a.click();
+    // window.URL.revokeObjectURL(url);
+    // alert('your file has downloaded!'); // or you know, something with better UX...
+    //     })
+    //     .catch(() => alert('oh no!'));
 
     var indicator = true
 
@@ -188,6 +205,13 @@ $(window).on('load', function () {
                                     const event = new Date(value.updated_at).toLocaleString("en-GB").split(', ');
                                     if (value.status == 1) {
                                         $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.timeline-date').html(`${event[0]} - ${event[1]}`)
+                                    }
+                                    if (value.file_dokumentasi != null) {
+                                        // $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.oi-magnifying-glass').attr('onclick', `lihatFile('${window.location.origin}/assets/images/dokumentasi/${value.file_dokumentasi}')`)
+                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('.oi-magnifying-glass').removeClass('d-none')
+                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('a').attr('data-lightbox', value.site_type)
+                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('a').attr('href', `${window.location.origin}/assets/images/dokumentasi/${value.file_dokumentasi}`)
+                                        $(`[data-id="${value.tahap_id}"]`).parents('.timeline-item').find('a').attr('data-title', `Catatan :  ${value.catatan ?? '-'}`)
                                     }
                                 })
                             } else {
